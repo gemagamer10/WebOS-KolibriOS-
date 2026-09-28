@@ -4,12 +4,14 @@ x86 emulator running inside a webOS TV app. Boots [KolibriOS](https://kolibrios.
 
 Tested on webOS 7.6.0.
 
+**No root required** — only LG Developer Mode.
+
 Download the `.ipk` from GitHub and install using `ares-install`.
 
 ## How to Use
 
 1. Download the pre-built `.ipk` from this repository
-2. Enable **Developer Mode** on your TV and connect via the webOS CLI
+2. Enable **Developer Mode** on your TV (LG Developer Mode app from the LG Content Store) and connect via the webOS CLI — **no root is needed**
 3. Install the app:
 
 ```bash
@@ -30,6 +32,7 @@ The app opens KolibriOS full-screen on your TV.
 - **No network dependency** — the emulator and OS are embedded inside the `.ipk`
 - **Graphical interface** at 640×480 (any color depth)
 - **Small package** — final `.ipk` is ~4.9 MB
+- **No root required** — runs as a regular sandboxed webOS app
 
 ## Technical Details
 
