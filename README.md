@@ -1,62 +1,65 @@
-# WebOS-KolibriOS-
-KolibriOS for WebOS. Tested on WebOS 7.6.0
-
 # KolibriOS WebOS
 
-Emulador x86 no teu LG webOS TV. Boota o [KolibriOS](https://kolibrios.org/) — um sistema operacional open source escrito inteiramente em assembly, com GUI completa, que ocupa ~1.4 MB e corre com 16 MB de RAM.
+x86 emulator running inside a webOS TV app. Boots [KolibriOS](https://kolibrios.org/) — an open-source OS written entirely in assembly, with a full GUI, occupying ~1.4 MB and running on 16 MB of RAM.
 
-Download the `.ipk` from GitHub and install using ares-install.
+Tested on webOS 7.6.0.
+
+Download the `.ipk` from GitHub and install using `ares-install`.
 
 ## How to Use
 
-1. Download do ficheiro `.ipk` pré-compilado deste repositório
-2. Ativa o **Developer Mode** na tua TV e liga-a via webOS CLI
-3. Instala a app usando:
+1. Download the pre-built `.ipk` from this repository
+2. Enable **Developer Mode** on your TV and connect via the webOS CLI
+3. Install the app:
 
 ```bash
-ares-install --device tv2 com.kolibri.webos_1.0.0_all.ipk
+ares-install --device <device> com.kolibri.webos_1.0.0_all.ipk
 ```
 
-4. Abre a app pelo menu da TV (ou via `ares-launch --device tv2 com.kolibri.webos`)
+4. Launch from the TV menu or via CLI:
 
-A app abre o KolibriOS em full screen na tua TV.
+```bash
+ares-launch --device <device> com.kolibri.webos
+```
+
+The app opens KolibriOS full-screen on your TV.
 
 ## Features
 
-- **KolibriOS completo** com GUI, mouse, teclado, editor de texto, visualizador de imagens, jogos
-- **Sem dependência de rede** — o emulador e o sistema estão embutidos no `.ipk`
-- **Interface gráfica** a 640×480 (qualquer profundidade de cor)
-- **Tamanho reduzido** — o `.ipk` final fica em ~4.9 MB
+- **Full KolibriOS** with GUI, mouse, keyboard, text editor, image viewer, games
+- **No network dependency** — the emulator and OS are embedded inside the `.ipk`
+- **Graphical interface** at 640×480 (any color depth)
+- **Small package** — final `.ipk` is ~4.9 MB
 
-## Especificações Técnicas
+## Technical Details
 
-| Parâmetro | Valor |
+| Parameter | Value |
 |---|---|
-| Emulador | [v86](https://github.com/copy/v86) (x86 → WebAssembly) |
-| Sistema convidado | KolibriOS (imagem de disquete, 1.4 MB) |
+| Emulator | [v86](https://github.com/copy/v86) (x86 → WebAssembly) |
+| Guest OS | KolibriOS (floppy image, 1.4 MB) |
 | `memory_size` | 16 MB |
 | `vga_memory_size` | 300 KB |
 | `fda` | `kolibri.img` |
-| Tamanho do `.ipk` | ~4.9 MB |
+| `.ipk` size | ~4.9 MB |
 
-## Estrutura
+## Project Structure
 
 ```
 .
-├── appinfo.json          # manifesto da app webOS
-├── icon.png              # ícone 80x80
-├── index.html            # instancia o V86Starter
+├── appinfo.json          # webOS app manifest
+├── icon.png              # 80x80 icon
+├── index.html            # instantiates the V86Starter
 ├── lib/
-│   ├── v86-bundle.js     # bundle do v86 (IIFE, sem imports ES)
-│   └── v86-wasm-b64.js   # v86.wasm em base64 (contorna CORS em file://)
+│   ├── v86-bundle.js     # v86 bundle (IIFE, no ES imports)
+│   └── v86-wasm-b64.js   # v86.wasm as base64 (bypasses file:// CORS)
 └── vm/
-    └── kolibri.img       # imagem do KolibriOS
+    └── kolibri.img       # KolibriOS image
 ```
 
-## Build (a partir do código-fonte)
+## Build (from source)
 
 ```bash
-# instalar dependências do v86 e gerar o bundle
+# install v86 dependencies and generate the bundle
 cd lib
 npm init -y
 npm install v86 esbuild
@@ -70,7 +73,7 @@ INNER
 
 npx esbuild bundle-entry.js --bundle --format=iife --outfile=v86-bundle.js
 
-# gerar o WASM em base64 (contorna restrição de file:// no webOS)
+# generate the WASM as base64 (bypasses file:// restriction on webOS)
 node -e "
 const fs = require('fs');
 const wasm = fs.readFileSync('node_modules/v86/build/v86.wasm');
@@ -78,24 +81,24 @@ fs.writeFileSync('v86-wasm-b64.js',
   'window.v86WasmBase64 = \"' + wasm.toString('base64') + '\";');
 "
 
-# empacotar
+# package
 cd ..
 ares-package --no-minify .
 ```
 
-## Limitações
+## Known Limitations
 
-- O webOS impõe um teto de memória por processo. Em TVs com pouca RAM livre, o OOM killer do sistema pode encerrar a app.
-- **Sem persistência entre boots**: as alterações feitas dentro do KolibriOS (resolução, tema, ficheiros) ficam em RAM e perdem-se ao fechar a app.
-- **Seleção de vídeo no boot**: o bootloader do KolibriOS mostra o menu de seleção de vídeo por alguns segundos. Para escolher, clica no canvas e aperta uma seta antes do timeout — senão ele escolhe a opção padrão sozinho.
+- webOS enforces a per-process memory ceiling. On TVs with low free RAM, the system's OOM killer may terminate the app.
+- **No persistence between boots**: changes made inside KolibriOS (resolution, theme, files) stay in RAM and are lost when the app is closed.
+- **Video selection on boot**: the KolibriOS bootloader shows the video mode menu for a few seconds. To pick one, click the canvas and press an arrow key before the timeout — otherwise it auto-selects the default.
 
-## Créditos
+## Credits
 
-- [v86](https://github.com/copy/v86) — Fabrice Bellard e contribuidores (BSD-2-Clause)
-- [KolibriOS](https://kolibrios.org/) — comunidade KolibriOS (GPLv2)
-- Este app — apenas cola os dois dentro do sandbox do webOS
+- [v86](https://github.com/copy/v86) — Fabrice Bellard and contributors (BSD-2-Clause)
+- [KolibriOS](https://kolibrios.org/) — KolibriOS community (GPLv2)
+- This app — just gluing both inside the webOS sandbox
 
 ## License
 
-O código deste app (HTML, JS de cola, README) é MIT.
-O v86 é BSD-2-Clause. O KolibriOS é GPLv2.
+This app's code (HTML, glue JS, README) is MIT.
+v86 is BSD-2-Clause. KolibriOS is GPLv2.
