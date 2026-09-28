@@ -26,7 +26,7 @@ A app abre o KolibriOS em full screen na tua TV.
 - **KolibriOS completo** com GUI, mouse, teclado, editor de texto, visualizador de imagens, jogos
 - **Sem dependência de rede** — o emulador e o sistema estão embutidos no `.ipk`
 - **Interface gráfica** a 640×480 (qualquer profundidade de cor)
-- **Tamanho reduzido** — o `.ipk` final fica em ~4 MB
+- **Tamanho reduzido** — o `.ipk` final fica em ~4.9 MB
 
 ## Especificações Técnicas
 
