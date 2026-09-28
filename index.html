@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="lib/v86-bundle.js"></script>
+<script src="lib/v86-wasm-b64.js"></script>
+</head>
+<body style="background:black; margin:0;">
+<div id="screen_container" style="padding:10px;">
+  <div style="white-space: pre; font: 14px monospace; line-height: 14px; color:#0f0;"></div>
+  <canvas style="display: none"></canvas>
+</div>
+<script>
+function base64ToArrayBuffer(base64) {
+  const binaryString = atob(base64);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
+  return bytes.buffer;
+}
+
+async function main() {
+  const wasmBuf = base64ToArrayBuffer(window.v86WasmBase64);
+  window.v86WasmBase64 = null;
+
+  new V86Starter({
+    wasm_fn: async (imports) => (await WebAssembly.instantiate(wasmBuf, imports)).instance.exports,
+    memory_size: 16 * 1024 * 1024, // 16 MB - dentro do requisito de 12-16 MB do KolibriOS
+    vga_memory_size: 300 * 1024, // 2 MB de VRAM para a GUI
+    screen_container: document.getElementById("screen_container"),
+    bios: { buffer: await v86Binaries.seabios },
+    vga_bios: { buffer: await v86Binaries.vgabios },
+    fda: { url: "vm/kolibri.img" },
+    autostart: true,
+  });
+}
+main();
+</script>
+</body>
+</html>

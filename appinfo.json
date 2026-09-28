@@ -1,0 +1,10 @@
+{
+  "id": "com.kolibri.webos",
+  "version": "1.0.0",
+  "vendor": "gema",
+  "type": "web",
+  "main": "index.html",
+  "title": "KolibriOS",
+  "icon": "icon.png",
+  "largeIcon": "icon.png"
+}
