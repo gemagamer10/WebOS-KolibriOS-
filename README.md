@@ -37,7 +37,7 @@ A app abre o KolibriOS em full screen na tua TV.
 | `memory_size` | 16 MB |
 | `vga_memory_size` | 300 KB |
 | `fda` | `kolibri.img` |
-| Tamanho do `.ipk` | ~4 MB |
+| Tamanho do `.ipk` | ~4.9 MB |
 
 ## Estrutura
 
